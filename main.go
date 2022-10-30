@@ -13,11 +13,12 @@ import (
 )
 
 var (
-	server         *gin.Engine
-	userController controllers.UserController
-	ctx            context.Context
-	dbClient       *mongo.Client
-	err            error
+	server          *gin.Engine
+	ctx             context.Context
+	dbClient        *mongo.Client
+	err             error
+	userController  controllers.UserController
+	helloController controllers.HelloController
 )
 
 func routes() {
@@ -25,11 +26,14 @@ func routes() {
 
 	userController = controllers.NewUserController(ctx, dbClient)
 	userController.RegisterUserRoutes(basePath)
+
+	helloController = controllers.NewHelloController()
+	helloController.RegisterHelloRoutes(basePath)
 }
 
 func init() {
 	ctx = context.TODO()
-	mongoConn := options.Client().ApplyURI("mongodb+srv://")
+	mongoConn := options.Client().ApplyURI("mongodb+srv://neotran:123abc@cluster0.wlfkhkk.mongodb.net/?retryWrites=true&w=majority")
 	dbClient, err = mongo.Connect(ctx, mongoConn)
 
 	if err != nil {
